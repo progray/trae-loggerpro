@@ -10,6 +10,8 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
+  PixelsPerInch = 120
   TextHeight = 13
   object Button1: TButton
     Left = 8
@@ -64,5 +66,14 @@ object MainForm: TMainForm
     Caption = 'FATAL'
     TabOrder = 5
     OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 294
+    Top = 71
+    Width = 423
+    Height = 57
+    Caption = 'Test Masking (Phone & Password)'
+    TabOrder = 6
+    OnClick = Button7Click
   end
 end
