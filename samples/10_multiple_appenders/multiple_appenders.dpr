@@ -3,6 +3,7 @@ program multiple_appenders;
 uses
   Vcl.Forms,
   LoggerProConfig in 'LoggerProConfig.pas',
+  LoggerPro.MaskingAppender in '..\..\LoggerPro.MaskingAppender.pas',
   MainFormU in '..\common\MainFormU.pas' {MainForm};
 
 {$R *.res}
