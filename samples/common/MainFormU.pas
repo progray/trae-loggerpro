@@ -22,12 +22,14 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
   { Private declarations }
   public
@@ -107,6 +109,21 @@ procedure TMainForm.Button6Click(Sender: TObject);
 begin
   Log.Fatal('This is an fatal message with TAG1', 'TAG1');
   Log.Fatal('This is an fatal message with TAG2', 'TAG2');
+end;
+procedure TMainForm.Button7Click(Sender: TObject);
+begin
+  // Test phone number masking
+  Log.Info('User phone: 13812345678, another phone: 15987654321', 'MASKING_TEST');
+  
+  // Test password masking
+  Log.Info('Login attempt: username=admin, password=secret123, remember=true', 'MASKING_TEST');
+  Log.Info('API request: url=/login?password=mypassword&token=abc123', 'MASKING_TEST');
+  
+  // Test mixed sensitive data
+  Log.Warn('User data: name=John, phone=18600001111, password=testpass123', 'MASKING_TEST');
+  
+  // Test case insensitivity for password
+  Log.Error('Connection string: PASSWORD=MySecretPass;Server=localhost', 'MASKING_TEST');
 end;
 
 end.
