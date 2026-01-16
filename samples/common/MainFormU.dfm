@@ -1,8 +1,8 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'LoggerPro SAMPLE'
-  ClientHeight = 132
+  Caption = 'LoggerPro SAMPLE - 脱敏测试'
+  ClientHeight = 200
   ClientWidth = 723
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -66,5 +66,34 @@ object MainForm: TMainForm
     Caption = 'FATAL'
     TabOrder = 5
     OnClick = Button6Click
+  end
+  object btnTestMasking: TButton
+    Left = 304
+    Top = 71
+    Width = 280
+    Height = 57
+    Caption = '测试脱敏功能'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlue
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 6
+    OnClick = btnTestMaskingClick
+  end
+  object Label1: TLabel
+    Left = 8
+    Top = 136
+    Width = 697
+    Height = 49
+    Caption = '提示：点击"测试脱敏功能"按钮，将输出包含敏感信息（手机号和密码）的日志消息，'#13#10'系统会自动对敏感信息进行脱敏处理。请查看控制台或日志文件验证脱敏效果。'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    WordWrap = True
   end
 end
