@@ -193,6 +193,10 @@ begin
       '..\..\data\activerecorddb.db');
     LParams.Add('Database=' + lFName);
     LParams.Add('StringFormat=Unicode');
+    LParams.Add('JournalMode=WAL');
+    LParams.Add('Synchronous=Normal');
+    LParams.Add('LockingMode=Normal');
+    LParams.Add('CacheSize=10000');
     if AIsPooled then
     begin
       LParams.Add('Pooled=True');
