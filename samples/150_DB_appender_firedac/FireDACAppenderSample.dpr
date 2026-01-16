@@ -13,7 +13,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  CreatePostgresqlPrivateConnDef(False);
+  CreateSqlitePrivateConnDef(False);
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.
