@@ -13,7 +13,8 @@ uses
   LoggerPro.FileAppender,
   LoggerPro.ConsoleAppender,
   LoggerPro.OutputDebugStringAppender,
-  LoggerPro.Builder;
+  LoggerPro.Builder,
+  LoggerPro.MaskingAppender;
 
 var
   _Log: ILogWriter;
@@ -41,9 +42,9 @@ begin
   //
   _Log := LoggerProBuilder
     .WithDefaultLogLevel(LOG_LEVEL)
-    .WriteToFile.Done
-    .WriteToConsole.Done
-    .WriteToOutputDebugString.Done
+    .WriteToAppender(TLoggerProMaskingAppender.Create(TLoggerProFileAppender.Create))
+    .WriteToAppender(TLoggerProMaskingAppender.Create(TLoggerProConsoleAppender.Create))
+    .WriteToAppender(TLoggerProMaskingAppender.Create(TLoggerProOutputDebugStringAppender.Create))
     .Build;
 
   // ============================================================================

@@ -22,12 +22,15 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    btnTestMasking: TButton;
+    Label1: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure btnTestMaskingClick(Sender: TObject);
   private
   { Private declarations }
   public
@@ -107,6 +110,16 @@ procedure TMainForm.Button6Click(Sender: TObject);
 begin
   Log.Fatal('This is an fatal message with TAG1', 'TAG1');
   Log.Fatal('This is an fatal message with TAG2', 'TAG2');
+end;
+
+procedure TMainForm.btnTestMaskingClick(Sender: TObject);
+begin
+  Log.Debug('User login with phone: 13812345678, password=MySecret123', 'MASKING_TEST');
+  Log.Info('Order from mobile: 15987654321, items: 3', 'MASKING_TEST');
+  Log.Warn('API request: /login?username=test&password=pass123&phone=18611112222', 'MASKING_TEST');
+  Log.Error('Sensitive data exposed: phone=13900001111, password=weakpass', 'MASKING_TEST');
+  Log.Debug('Test without sensitive data', 'MASKING_TEST');
+  Log.Info('Multiple phones: 13511112222 and 18833334444', 'MASKING_TEST');
 end;
 
 end.
