@@ -57,4 +57,13 @@ object MainForm: TMainForm
     TabOrder = 4
     OnClick = Button5Click
   end
+  object Button6: TButton
+    Left = 294
+    Top = 71
+    Width = 280
+    Height = 57
+    Caption = 'SQLite Appender Test'
+    TabOrder = 5
+    OnClick = Button6Click
+  end
 end

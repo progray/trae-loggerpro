@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{6428419F-8F13-4ED8-94A7-2F7860515AAC}</ProjectGuid>
         <ProjectVersion>20.1</ProjectVersion>
@@ -110,6 +110,8 @@
         </DCCReference>
         <DCCReference Include="LoggerProConfig.pas"/>
         <DCCReference Include="FDConnectionConfigU.pas"/>
+        <DCCReference Include="LoggerPro.SQLiteAppender.pas"/>
+        <DCCReference Include="SQLiteDBInit.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

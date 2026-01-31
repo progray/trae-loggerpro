@@ -11,6 +11,7 @@ procedure CreateMySQLPrivateConnDef(AIsPooled: boolean);
 procedure CreateMSSQLServerPrivateConnDef(AIsPooled: boolean);
 procedure CreatePostgresqlPrivateConnDef(AIsPooled: boolean);
 procedure CreateSqlitePrivateConnDef(AIsPooled: boolean);
+procedure CreateSqliteOptimizedConnDef(AIsPooled: boolean);
 
 implementation
 
@@ -193,6 +194,40 @@ begin
       '..\..\data\activerecorddb.db');
     LParams.Add('Database=' + lFName);
     LParams.Add('StringFormat=Unicode');
+    if AIsPooled then
+    begin
+      LParams.Add('Pooled=True');
+      LParams.Add('POOL_MaximumItems=100');
+    end
+    else
+    begin
+      LParams.Add('Pooled=False');
+    end;
+    FDManager.AddConnectionDef(CON_DEF_NAME, 'SQLite', LParams);
+  finally
+    LParams.Free;
+  end;
+end;
+
+procedure CreateSqliteOptimizedConnDef(AIsPooled: boolean);
+var
+  LParams: TStringList;
+  lFName: string;
+begin
+  LParams := TStringList.Create;
+  try
+    lFName := TPath.Combine(TPath.GetDirectoryName(ParamStr(0)),
+      '..\..\data\loggerpro_sqlite.db');
+    LParams.Add('Database=' + lFName);
+    LParams.Add('StringFormat=Unicode');
+    LParams.Add('JournalMode=WAL');          // Enable Write-Ahead Logging for better concurrency
+    LParams.Add('Synchronous=Normal');       // Balance between safety and performance
+    LParams.Add('CacheSize=-10000');         // Use 10MB of memory for cache
+    LParams.Add('TempStore=Memory');         // Store temporary tables in memory
+    LParams.Add('MMapSize=268435456');       // Use memory-mapped I/O (256MB)
+    LParams.Add('LockingMode=Normal');       // Optimize for bulk inserts
+    LParams.Add('BusyTimeout=30000');        // 30 seconds timeout for locked database
+    
     if AIsPooled then
     begin
       LParams.Add('Pooled=True');
