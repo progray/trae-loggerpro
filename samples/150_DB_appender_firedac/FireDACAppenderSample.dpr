@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   FireDACAppenderFormU in 'FireDACAppenderFormU.pas' {MainForm},
   LoggerProConfig in 'LoggerProConfig.pas',
-  FDConnectionConfigU in 'FDConnectionConfigU.pas';
+  FDConnectionConfigU in 'FDConnectionConfigU.pas',
+  SQLiteDBInit in 'SQLiteDBInit.pas';
 
 //LoggerPro.RESTAppender in '..\..\LoggerPro.RESTAppender.pas';
 
@@ -13,7 +14,8 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  CreatePostgresqlPrivateConnDef(False);
+  CreateSqliteOptimizedConnDef(False);
+  InitializeSQLiteDatabase;  // Initialize SQLite database and tables
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

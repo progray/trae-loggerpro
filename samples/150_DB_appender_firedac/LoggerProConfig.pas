@@ -7,9 +7,10 @@ interface
 uses
   LoggerPro;
 
-///<summary>global function pointer tha returns a DB Logger instance</summary>
+///<summary>global function pointer that returns a DB Logger instance</summary>
 var
   Log: function: ILogWriter;
+  SQLiteLog: function: ILogWriter;
 
 implementation
 
@@ -19,6 +20,7 @@ uses
   LoggerPro.DBAppender.FireDAC,
   LoggerPro.FileAppender,
   LoggerPro.Builder,
+  LoggerPro.SQLiteAppender,
   Data.DB,
   System.IOUtils,
   System.NetEncoding,
@@ -40,6 +42,7 @@ uses
 var
   _Log: ILogWriter;
   _FallbackLog: ILogWriter;
+  _SQLiteLog: ILogWriter;
 
 const
   FailedDBWriteTag = 'FailedDBWrite';
@@ -61,49 +64,53 @@ begin
   Result := _FallbackLog;
 end;
 
-function GetLogger: ILogWriter;
+function GetSQLiteLogger: ILogWriter;
+var
+  LConnectionString: string;
+  LSQLiteAppender: TLoggerProSQLiteAppender;
 begin
+  if _SQLiteLog = nil then
+  begin
+    GetFallBackLogger.Info('Initializing SQLite appender', FailedDBWriteTag);
+    
+    // Create optimized SQLite connection
+    CreateSqliteOptimizedConnDef(False);
+    
+    // Build connection string for SQLite
+    LConnectionString := 
+      'DriverID=SQLite;' +
+      'Database=' + TPath.Combine(TPath.GetDirectoryName(ParamStr(0)), '..\..\data\loggerpro_sqlite.db') + ';' +
+      'JournalMode=WAL;' +
+      'Synchronous=Normal;' +
+      'CacheSize=-10000;' +
+      'TempStore=Memory;' +
+      'MMapSize=268435456;' +
+      'LockingMode=Normal;' +
+      'BusyTimeout=30000;' +
+      'StringFormat=Unicode';
+    
+    // Create SQLite Appender with batch size 100, flush interval 500ms, and max log age 30 days
+    LSQLiteAppender := TLoggerProSQLiteAppender.Create(LConnectionString, 100, 500, 30);
+    
+    // Build logger with SQLite appender and fallback
+    _SQLiteLog := LoggerProBuilder
+      .WriteToAppender(LSQLiteAppender)
+      .WriteToAppender(TLoggerProSimpleFileAppender.Create(10, 2048, 'logs'))
+      .Build;
+  end;
+  Result := _SQLiteLog;
+end;
 
+function GetLogger: ILogWriter;
+var
+  lIntf: ILogItemRenderer;
+begin
   if _Log = nil then
   begin
     GetFallBackLogger.Info('Initializing db appender', FailedDBWriteTag);
 
     // BuildLogWriter is the classic way to create a log writer.
     // The modern and recommended approach is to use LoggerProBuilder.
-    //_Log := BuildLogWriter([TLoggerProDBAppenderFireDAC.Create(
-    //  // create an ADO DB Connection
-    //  function: TCustomConnection
-    //  begin
-    //    Result := TFDConnection.Create(nil);
-    //    Result.LoginPrompt := False;
-    //    // todo:  set the connection string in here, typically read from env variables or config file
-    //    TFDConnection(Result).ConnectionDefName := CON_DEF_NAME;
-    //  end,
-    //// create a stored proc
-    //  function(Connection: TCustomConnection): TFDStoredProc
-    //  begin
-    //    Result := TFDStoredProc.Create(nil);
-    //    Result.StoredProcName := 'sp_loggerpro_writer';
-    //    Result.Connection := Connection as TFDConnection;
-    //  end,
-    //// populate the stored proc
-    //  procedure(SP: TFDStoredProc; LogItem: TLogItem)
-    //  begin
-    //    SP.ParamByName('p_log_type').Value := Integer(LogItem.LogType);
-    //    SP.ParamByName('p_log_tag').Value := LogItem.LogTag;
-    //    SP.ParamByName('p_log_message').Value := LogItem.LogMessage;
-    //    SP.ParamByName('p_log_timestamp').Value := LogItem.TimeStamp;
-    //    SP.ParamByName('p_log_thread_id').Value := LogItem.ThreadID;
-    //  end,
-    //  // error handler, just write to disk on the server for later analysis
-    //  procedure(const Sender: TObject; const LogItem: TLogItem; const DBError: Exception; var RetryCount: Integer)
-    //  var
-    //    lIntf: ILogItemRenderer;
-    //  begin
-    //    lIntf := GetDefaultLogItemRenderer();
-    //    GetFallBackLogger.Error('DBAppender Is Failing (%d): %s %s', [RetryCount, DBError.ClassName, DBError.Message], FailedDBWriteTag);
-    //    GetFallBackLogger.Error(lIntf.RenderLogItem(LogItem), FailedDBWriteTag);
-    //  end)]);
     _Log := LoggerProBuilder
       .WriteToAppender(TLoggerProDBAppenderFireDAC.Create(
         // create an ADO DB Connection
@@ -132,8 +139,6 @@ begin
         end,
         // error handler, just write to disk on the server for later analysis
         procedure(const Sender: TObject; const LogItem: TLogItem; const DBError: Exception; var RetryCount: Integer)
-        var
-          lIntf: ILogItemRenderer;
         begin
           lIntf := GetDefaultLogItemRenderer();
           GetFallBackLogger.Error('DBAppender Is Failing (%d): %s %s', [RetryCount, DBError.ClassName, DBError.Message], FailedDBWriteTag);
@@ -147,10 +152,12 @@ end;
 initialization
 
 Log := GetLogger;
+SQLiteLog := GetSQLiteLogger;
 
 finalization
 
 _Log := nil;
 _FallbackLog := nil;
+_SQLiteLog := nil;
 
 end.
