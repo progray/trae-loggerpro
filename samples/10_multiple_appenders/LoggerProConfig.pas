@@ -13,6 +13,7 @@ uses
   LoggerPro.FileAppender,
   LoggerPro.ConsoleAppender,
   LoggerPro.OutputDebugStringAppender,
+  LoggerPro.MaskingAppender,
   LoggerPro.Builder;
 
 var
@@ -38,6 +39,7 @@ begin
   //   - Multiple appenders (File, Console, OutputDebugString)
   //   - Conditional log level based on DEBUG/RELEASE build
   //   - WithDefaultLogLevel to set minimum level for all appenders
+  //   - MaskingAppender to hide sensitive data (phone numbers and passwords)
   //
   _Log := LoggerProBuilder
     .WithDefaultLogLevel(LOG_LEVEL)
@@ -45,6 +47,20 @@ begin
     .WriteToConsole.Done
     .WriteToOutputDebugString.Done
     .Build;
+
+  // ============================================================================
+  // LoggerPro with MaskingAppender Example
+  // ============================================================================
+  // Example of using MaskingAppender to wrap another appender:
+  // var
+  //   FileAppender: ILogAppender;
+  // begin
+  //   FileAppender := TLoggerProFileAppender.Create;
+  //   _Log := LoggerProBuilder
+  //     .WithDefaultLogLevel(LOG_LEVEL)
+  //     .WriteToAppender(TLoggerProMaskingAppender.Create(FileAppender))
+  //     .Build;
+  // end;
 
   // ============================================================================
   // LoggerPro 1.x - Legacy API (Still supported but deprecated)
