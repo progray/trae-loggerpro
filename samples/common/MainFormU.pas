@@ -22,12 +22,14 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
   { Private declarations }
   public
@@ -107,6 +109,23 @@ procedure TMainForm.Button6Click(Sender: TObject);
 begin
   Log.Fatal('This is an fatal message with TAG1', 'TAG1');
   Log.Fatal('This is an fatal message with TAG2', 'TAG2');
+end;
+
+procedure TMainForm.Button7Click(Sender: TObject);
+begin
+  // 演示 TLoggerProMaskingAppender 的脱敏功能
+  // 手机号脱敏：13812345678 -> 138****5678
+  Log.Info('User login with phone: 13812345678', 'MASKING');
+  Log.Info('Contact phone: 15987654321, backup: 13611112222', 'MASKING');
+
+  // 密码脱敏：password=xxx -> password=***
+  Log.Info('Login attempt: username=admin, password=secret123', 'MASKING');
+  Log.Info('Request: user=john, pwd=myP@ssw0rd, action=login', 'MASKING');
+  Log.Info('Config: passwd=abc123, host=localhost', 'MASKING');
+  Log.Info('Password with special chars: password=P@$$w0rd!2024', 'MASKING');
+
+  // 混合敏感信息
+  Log.Info('User 13812345678 logged in with password=MySecretPwd', 'MASKING');
 end;
 
 end.
