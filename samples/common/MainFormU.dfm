@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'LoggerPro SAMPLE'
   ClientHeight = 132
-  ClientWidth = 723
+  ClientWidth = 866
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -64,5 +64,14 @@ object MainForm: TMainForm
     Caption = 'FATAL'
     TabOrder = 5
     OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 294
+    Top = 71
+    Width = 280
+    Height = 57
+    Caption = 'Test Data Masking'
+    TabOrder = 6
+    OnClick = Button7Click
   end
 end

@@ -22,12 +22,14 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
   { Private declarations }
   public
@@ -107,6 +109,17 @@ procedure TMainForm.Button6Click(Sender: TObject);
 begin
   Log.Fatal('This is an fatal message with TAG1', 'TAG1');
   Log.Fatal('This is an fatal message with TAG2', 'TAG2');
+end;
+
+procedure TMainForm.Button7Click(Sender: TObject);
+begin
+  // Demonstrate masking of sensitive data
+  Log.Info('User login attempt: phone=13812345678, password=secret123', 'MASKING');
+  Log.Info('Contact info: mobile=13987654321, name=John', 'MASKING');
+  Log.Info('Request: /api/login?username=test&password=mySecretPass&phone=15011112222', 'MASKING');
+  Log.Info('JSON payload: {"username":"test","password":"superSecret123","phone":"18612345678"}', 'MASKING');
+  Log.Info('Config: password = "quoted password value"', 'MASKING');
+  Log.Info('Multiple phones: 13811111111 and 13922222222 in one message', 'MASKING');
 end;
 
 end.
