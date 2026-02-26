@@ -48,6 +48,11 @@ procedure TMainForm.Button1Click(Sender: TObject);
 begin
   Log.Debug('This is a debug message with TAG1', 'TAG1');
   Log.Debug('This is a debug message with TAG2', 'TAG2');
+
+  Log.Debug('User phone: 13812345678, please call back', 'MASKING_TEST');
+  Log.Debug('Contact: 13987654321, password=mysecret123', 'MASKING_TEST');
+  Log.Debug('Login info - password:abc123 and phone 15900001111', 'MASKING_TEST');
+
   var lLogWithCtx := Log
                         .WithProperty('value1',1)
                         .WithProperty('value2','2')
